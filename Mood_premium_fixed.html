@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verifikasi Mood Premium</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+padding:20px;
+background:
+radial-gradient(circle at 20% 20%, #9d7cff 0%, transparent 35%),
+radial-gradient(circle at 80% 30%, #6c5cff 0%, transparent 35%),
+radial-gradient(circle at 50% 80%, #c5b7ff 0%, transparent 35%),
+#120f2b;
+animation:bgMove 12s ease-in-out infinite alternate;
+}
+
+.card{
+width:100%;
+max-width:450px;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(25px);
+border:1px solid rgba(255,255,255,.15);
+padding:30px;
+border-radius:35px;
+text-align:center;
+color:white;
+box-shadow:
+0 0 30px rgba(108,92,255,.3),
+0 20px 60px rgba(0,0,0,.25);
+animation:cardEnter 1s ease;
+}
+
+.icon{
+font-size:95px;
+animation:heartGlow 2.5s infinite ease-in-out;
+filter:drop-shadow(0 0 20px rgba(255,255,255,.7));
+}
+
+h1{
+margin-top:10px;
+margin-bottom:10px;
+}
+
+.desc{
+opacity:.9;
+line-height:1.6;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:16px;
+border:none;
+outline:none;
+border-radius:18px;
+font-size:16px;
+text-align:center;
+background:rgba(255,255,255,.15);
+color:white;
+margin-bottom:15px;
+}
+
+input::placeholder{
+color:rgba(255,255,255,.7);
+}
+
+button{
+width:100%;
+padding:16px;
+border:none;
+border-radius:18px;
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+background:linear-gradient(135deg,#ffffff,#d7ccff);
+color:#5f48ff;
+transition:.3s;
+}
+
+button:hover{
+transform:translateY(-4px);
+}
+
+#welcome{
+display:none;
+font-size:24px;
+font-weight:bold;
+margin:20px 0;
+}
+
+#btn{
+display:none;
+}
+
+.progress{
+display:none;
+width:100%;
+height:12px;
+background:rgba(255,255,255,.15);
+border-radius:20px;
+overflow:hidden;
+margin-top:20px;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:white;
+}
+
+.status{
+margin-top:15px;
+font-weight:bold;
+}
+
+.result{
+display:none;
+margin-top:20px;
+}
+
+.circle{
+width:170px;
+height:170px;
+border-radius:50%;
+margin:20px auto;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:38px;
+font-weight:bold;
+background:white;
+color:#6c5cff;
+box-shadow:0 0 40px rgba(255,255,255,.6);
+}
+
+.result-box{
+padding:20px;
+border-radius:20px;
+background:rgba(255,255,255,.12);
+}
+
+.confetti{
+position:fixed;
+width:10px;
+height:10px;
+border-radius:50%;
+pointer-events:none;
+}
+
+@keyframes bgMove{
+0%{
+background-position:0 0,100% 0,50% 100%;
+}
+100%{
+background-position:20% 20%,80% 20%,40% 80%;
+}
+}
+
+@keyframes cardEnter{
+from{
+opacity:0;
+transform:translateY(40px) scale(.9);
+}
+to{
+opacity:1;
+transform:translateY(0) scale(1);
+}
+}
+
+@keyframes heartGlow{
+0%,100%{
+transform:scale(1);
+}
+50%{
+transform:scale(1.12);
+}
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+<div class="icon">❤️‍🩹</div>
+
+<h1>Bagaimana Mood nya hari ini</h1>
+
+<p class="desc">
+Masukkan nama terlebih dahulu untuk memulai verifikasi mood.
+</p>
+
+<input
+type="text"
+id="nama"
+placeholder="Masukkan nama kamu..."
+>
+
+<button id="saveBtn" onclick="saveName()">
+Masukkan Nama
+</button>
+
+<div id="welcome"></div>
+
+<button id="btn" onclick="verify()">
+Yokk mulaii
+</button>
+
+<div class="progress" id="progress">
+<div class="bar" id="bar"></div>
+</div>
+
+<div class="status" id="status"></div>
+
+<div class="result" id="result"></div>
+
+</div>
+
+<script>
+
+let namaUser="";
+
+function saveName(){
+
+let nama=document.getElementById("nama").value.trim();
+
+if(!nama){
+alert("Masukkan nama terlebih dahulu!");
+return;
+}
+
+namaUser=nama;
+
+document.getElementById("nama").style.display="none";
+document.getElementById("saveBtn").style.display="none";
+
+let welcome=document.getElementById("welcome");
+
+welcome.style.display="block";
+welcome.innerHTML=`Halo ${namaUser}!`;
+
+setTimeout(()=>{
+document.getElementById("btn").style.display="block";
+},1000);
+
+}
+
+function confetti(){
+
+for(let i=0;i<120;i++){
+
+let c=document.createElement("div");
+
+c.className="confetti";
+
+c.style.left=Math.random()*100+"vw";
+
+c.style.background=
+["#fff","#ffd43b","#ff8787","#91a7ff"]
+[Math.floor(Math.random()*4)];
+
+document.body.appendChild(c);
+
+let y=-20;
+let speed=3+Math.random()*5;
+
+let fall=setInterval(()=>{
+
+y+=speed;
+
+c.style.transform=`translateY(${y}px)`;
+
+if(y>window.innerHeight){
+clearInterval(fall);
+c.remove();
+}
+
+},16);
+
+}
+
+}
+
+function verify(){
+
+const progress=document.getElementById("progress");
+const bar=document.getElementById("bar");
+const status=document.getElementById("status");
+const result=document.getElementById("result");
+
+progress.style.display="block";
+
+let width=0;
+
+const proses=[
+` Memindai mood ${namaUser}...`,
+` Sistem sedang menganalisis ${namaUser}...`,
+` Menghitung tingkat mood...`,
+` Menyelesaikan verifikasi...`
+];
+
+let step=0;
+
+status.innerHTML=proses[0];
+
+let teks=setInterval(()=>{
+
+step++;
+
+if(step<proses.length){
+status.innerHTML=proses[step];
+}
+
+},1000);
+
+let load=setInterval(()=>{
+
+width++;
+
+bar.style.width=width+"%";
+
+if(width>=100){
+
+clearInterval(load);
+clearInterval(teks);
+
+let mood=Math.floor(Math.random()*100)+1;
+
+let kategori="Mood Normal";
+let pesan=`✨ Mood ${namaUser} cukup stabil hari ini.`;
+
+if(mood<=20){
+kategori="Mood Sangat Rendah";
+
+const pesanList=[
+`${namaUser}, kayakk nyaa kamu lagi capekk yaa hari ini. Coba luangkan waktu untuk istirahat dan jangan terlalu keras pada diri sendiri.`,
+`kayak nyaa hari ini belum sesuai dengan harapan ${namaUser}. Tidak apa-apa, semua orang punya hari yang berat kokk.`,
+`${namaUser}, mungkin kamu terlalu memikirkan banyak hal. Coba istirahat sebentar lalu lakukan hal yang kamu sukai.`
+];
+
+pesan=pesanList[Math.floor(Math.random()*pesanList.length)];
+
+}else if(mood<=40){
+
+kategori="Mood Rendah";
+
+const pesanList=[
+`${namaUser}, kayakk nyaa lgii kurang ceriaa hari ini, tapi haruss tetapp semangatt.`,
+`Mungkin ada beberapa hal yang membuat ${namaUser} merasa kurang nyaman. Semoga semuanya segera membaik ya.`,
+`${namaUser}, jangan lupa istirahat. Kadang itu yang paling dibutuhkan.`
+];
+
+pesan=pesanList[Math.floor(Math.random()*pesanList.length)];
+
+}else if(mood<=60){
+
+kategori="Mood Normal";
+
+const pesanList=[
+`${namaUser} kayakk nyaa lagii ceriaa nihh. gituu dongg haruss semangat teruss.`,
+`Hari ini kayakk nyaa menyenangkan untuk ${namaUser}. Nikmati ajaa.`,
+`${namaUser}, suasana hatimu kayakk nya lagii senang.`
+];
+
+pesan=pesanList[Math.floor(Math.random()*pesanList.length)];
+
+}else if(mood<=80){
+
+kategori="Mood Baik";
+
+const pesanList=[
+`${namaUser} kayakk nyaa menikmati hari inii. selalu tersenyum seperti ini ya.`,
+`Suasana hati ${namaUser} sepertinya sedang bagus.`,
+`${namaUser}, hari ini kamu terlihat lebih bersemangat dari biasanya. Semoga harimu menyenangkan.`
+];
+
+pesan=pesanList[Math.floor(Math.random()*pesanList.length)];
+
+}else{
+
+kategori="Mood Sangat Baik";
+
+const pesanList=[
+`${namaUser}, kamu kayakk nyaa sangat sedangg bersemangat hari ini.`,
+`Hari ini kayakk nyaa jadi hari yang cukup menyenangkan untuk ${namaUser}. enjoyy yourr timee.`,
+`${namaUser}, senyum dan semangatmu sedang berada di level terbaik hari ini. Tetap pertahankan ya.`
+];
+
+pesan=pesanList[Math.floor(Math.random()*pesanList.length)];
+
+confetti();
+confetti();
+}
+result.innerHTML=`
+<div class="result-box">
+
+<h2>Verifikasi Berhasil</h2>
+
+<div class="circle" id="circle">
+0%
+</div>
+
+<h3>${kategori}</h3>
+
+<p style="margin-top:10px">
+${pesan}
+</p>
+
+</div>
+`;
+
+result.style.display="block";
+
+let count=0;
+
+let anim=setInterval(()=>{
+
+count++;
+
+document.getElementById("circle").innerHTML=
+count+"%";
+
+if(count>=mood){
+clearInterval(anim);
+}
+
+},20);
+
+status.innerHTML="";
+
+}
+
+},30);
+
+}
+</script>
+
+</body>
+</html>
